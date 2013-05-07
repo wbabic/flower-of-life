@@ -55,3 +55,4 @@
 (def s7 (circle-set :c7 c7))
 
 (def circle-set [s0 s1 s2 s3 s4 s51 s52 s6 s7])
+(def tree-set [s0 s3 s6])
