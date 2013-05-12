@@ -1,5 +1,6 @@
 (ns edn-play.flower
-  (:require [edn-play.geometry :as geom]))
+  (:require [edn-play.geometry :as geom]
+            [clojure.math.combinatorics :as combo]))
 
 (defn circle-set [name circles]
   {:name name
@@ -55,4 +56,69 @@
 (def s7 (circle-set :c7 c7))
 
 (def circle-set [s0 s1 s2 s3 s4 s51 s52 s6 s7])
-(def tree-set [s0 s3 s6])
+(def tree-set [s0 s3 s7])
+
+
+;; metatron's cube
+;; inner inner-to-outer outer
+;; {:name :lines [[p1 p2] [p3 p4] ...]}
+
+(defn line-set [name lines]
+  {:name name
+   :lines lines})
+
+(def inner (line-set :inner (vec (map vec (combo/combinations c3 2)))))
+
+(def outer (line-set :outer (vec (map vec (combo/combinations c7 2)))))
+
+;; outer-to-inner
+(def o-to-i (line-set :outerToInner (reduce into [] (for [po c7] (for [pi c3] [po pi])))))
+
+(def metatron [inner outer o-to-i])
+
+;; 4 tetraaheda; inner outer up down
+;; tiu tid tou tod
+(comment
+  "sample data set"
+  {:name :tiu
+   :faces [{:name :tiu0
+            :points [i2 i4 i6]
+            :color (0,0,0,0)}]})
+
+(defn up-faces [d]
+  [[c0 (nth d 0) (nth d 2)]
+   [c0 (nth d 2) (nth d 4)]
+   [c0 (nth d 4) (nth d 0)]
+   [(nth d 0) (nth d 2) (nth d 4)]])
+
+(defn down-faces [d]
+  [[c0 (nth d 1) (nth d 3)]
+   [c0 (nth d 3) (nth d 5)]
+   [c0 (nth d 5) (nth d 1)]
+   [(nth d 1) (nth d 3) (nth d 5)]])
+
+
+(def color-set1 [:r :g :b :w])
+(def color-set2 [:m :c :y :w])
+
+
+(defn make-tetrahedron-faces [namek data color]
+  (let [i (count data)
+        base-name (name namek)]
+    (map
+     (fn [j d c]
+       {:name (keyword (str base-name j))
+        :points d
+        :color c})
+     (range i) data color)))
+
+(defn make-tetrahedron [name data color]
+  {:name name
+   :faces (vec (make-tetrahedron-faces name data color))})
+
+(def tiu (make-tetrahedron :tiu (up-faces c3) color-set1))
+(def tid (make-tetrahedron :tid (down-faces c3) color-set2))
+(def tou (make-tetrahedron :tou (up-faces c7) color-set1))
+(def tod (make-tetrahedron :tod (down-faces c7) color-set2))
+
+(def tetrahedra [tiu tid tou tod])

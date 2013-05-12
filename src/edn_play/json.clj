@@ -2,11 +2,20 @@
   (:require [clojure.data.json :as json]
             [edn-play.flower :as flower]))
 
+(defn data-to-file [file-name data]
+  (spit file-name (json/write-str data)))
+
 (defn write-flower-to-json-file [file-name]
-  (spit file-name  (json/write-str flower/circle-set)))
+  (data-to-file file-name flower/circle-set))
 
 (defn write-tree-to-json-file [file-name]
-  (spit file-name  (json/write-str flower/tree-set)))
+  (data-to-file file-name flower/tree-set))
+
+(defn write-metatron [file-name]
+  (data-to-file file-name flower/metatron))
+
+(defn write-tetrahedra [file-name]
+  (data-to-file file-name flower/tetrahedra))
 
 (defn read-json [file-name]
   (json/read-str (slurp file-name) :key-fn keyword))
