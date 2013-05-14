@@ -17,5 +17,11 @@
 (defn write-tetrahedra [file-name]
   (data-to-file file-name flower/tetrahedra))
 
+(defn write-cube [file-name]
+  (data-to-file file-name flower/cube))
+
+(defn write-octohedra [file-name]
+  (data-to-file file-name flower/octohedra))
+
 (defn read-json [file-name]
   (json/read-str (slurp file-name) :key-fn keyword))

@@ -122,3 +122,77 @@
 (def tod (make-tetrahedron :tod (down-faces c7) color-set2))
 
 (def tetrahedra [tiu tid tou tod])
+
+;; cube inner and outer :ci :co
+;; 3 front and 3 back faces
+;; each face with 4 points
+
+(defn cube-faces [d]
+  [[c0 (nth d 0) (nth d 1) (nth d 2)]
+   [c0 (nth d 2) (nth d 3) (nth d 4)]
+   [c0 (nth d 4) (nth d 5) (nth d 0)]
+   [c0 (nth d 5) (nth d 0) (nth d 1)]
+   [c0 (nth d 1) (nth d 2) (nth d 3)]
+   [c0 (nth d 3) (nth d 4) (nth d 5)]])
+
+(def cube-color-set [:r :g :b :y :c :m])
+
+(defn make-cube-faces [namek data color]
+  (let [i (count data)
+        base-name (name namek)]
+    (map
+     (fn [j d c]
+       {:name (keyword (str base-name j))
+        :points d
+        :color c})
+     (range i) data color)))
+
+(defn make-cube [name data color]
+  {:name name
+   :faces (make-cube-faces name data color)})
+
+(def ci (make-cube :ci (cube-faces c3) cube-color-set))
+(def co (make-cube :co (cube-faces c7) (take 6 (drop 3 (cycle cube-color-set)))))
+
+(def cube [ci co])
+
+;; octohedron inner and outer :oi :oo
+;; 4 front and 4 back faces
+;; each face a triangle
+
+(defn octohedron-faces [d]
+  [[(nth d 0) (nth d 2) (nth d 4)]
+   [(nth d 0) (nth d 2) (nth d 1)]
+   [(nth d 2) (nth d 4) (nth d 3)]
+   [(nth d 4) (nth d 0) (nth d 5)]
+   [(nth d 1) (nth d 3) (nth d 5)]
+   [(nth d 1) (nth d 3) (nth d 2)]
+   [(nth d 3) (nth d 5) (nth d 4)]
+   [(nth d 5) (nth d 1) (nth d 0)]])
+
+(defn make-octohedron-faces [namek data color]
+  (let [i (count data)
+        base-name (name namek)]
+    (map
+     (fn [j d c]
+       {:name (keyword (str base-name j))
+        :points d
+        :color c})
+     (range i) data color)))
+
+(defn make-octohedron [name data color]
+  {:name name
+   :faces (make-octohedron-faces name data color)})
+
+(def octohedron-color-set1 [:r :g :b :w :y :c :m :w])
+(def octohedron-color-set2 [:y :c :m :w :r :g :b :w])
+
+(def oi (make-octohedron :oi (octohedron-faces c3) octohedron-color-set1))
+(def oo (make-octohedron :oo (octohedron-faces c7) octohedron-color-set2))
+
+(def octohedra [oi oo])
+
+
+;; icosohedron
+;; 20 faces 10 front 10 back
+
