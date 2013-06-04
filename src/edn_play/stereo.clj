@@ -36,23 +36,28 @@
   "project from plane to sphere"
   [[u v :as r]]
   (let [p (vec-dot r r)
-        q (+ 1 p)
-        _ (println "p: " p)
-        _ (println "q: " q)]
+        q (+ 1 p)]
     [(/ (* 2 u) q)
      (/ (* 2 v) q)
      (/ (- 1 p) q)]))
 
-
 (comment
+  ;; south pole -> origin
   (to-plane [0 0 -1])
   ;;=> [0 0]
+
+  ;; equator to unit circle
   (to-plane [1 0 0])
   ;;=> [1 0]
   (to-plane [0 1 0])
   ;;=> [0 1]
-
-
+  (def p1 (vec-normalize [1 1 0]))
+  (vec-length p1)
+  ;;=> 0.9999999999999999
+  (def q1 (to-plane p1))
+  (vec-length q1)
+  ;;=> 0.9999999999999999
+  
   (to-sphere [1 0])
   ;;=> [1 0 0]
 
@@ -65,4 +70,6 @@
 
   (to-plane (to-sphere [100 0]))
   [1/100 0N]
+
+  (to-sphere (to-plane (vec-normalize [1 1 1])))
   )
