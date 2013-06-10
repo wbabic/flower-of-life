@@ -1,4 +1,4 @@
-(ns edn-play.geometry
+x(ns edn-play.geometry
   (:require [clojure.math.numeric-tower :as math]))
 
 ;; simple representaion of a complex number
@@ -98,7 +98,7 @@ in polar form"
 
 (def degrees
   "return degrees of rect from, rounded"
-  (comp math/round #(Math/toDegrees %) :a toPolar))
+  (comp math/round #(Math/toDegrees %) :a rect->polar))
 
 (defn degrees-polar [z]
   ((comp math/round #(Math/toDegrees %) :a) z))
@@ -107,7 +107,7 @@ in polar form"
   "return length of rect form, rounded"
   (fn [r]
     (-> r
-        toPolar
+        rect->polar
         :r
         (* 100)
         math/round
