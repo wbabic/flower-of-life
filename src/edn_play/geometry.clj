@@ -1,4 +1,4 @@
-x(ns edn-play.geometry
+(ns edn-play.geometry
   (:require [clojure.math.numeric-tower :as math]))
 
 ;; simple representaion of a complex number
@@ -119,7 +119,7 @@ in polar form"
   (fromPolar 1 angle))
 
 (defn inverse [z]
-  (fromPolar (/ 1 (length z)) (* -1 (arg z))))
+  (fromPolar (/ 1 (length z)) (- (arg z))))
 
 (defn inverse-rect
   "given z in rect form return 1/z
@@ -127,7 +127,7 @@ without converting to polar form"
   [z]
   (let [r (len-square z)]
     {:re (/ (:re z) r)
-     :im (* -1 (/ (:im z) r))}))
+     :im (- (/ (:im z) r))}))
 
 (defn div-rect
   "given z1 z2 in rect form

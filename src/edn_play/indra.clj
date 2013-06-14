@@ -19,6 +19,22 @@
 ;; affine: z -> az + b
 ;; a != 0, affine group of maps
 
+(defn s [a]
+  (fn [z] (mult-rect a z)))
+
+(defn t [b]
+  (fn [z] (plus z b)))
+
+(defn affine [a b]
+  "z -> az + b"
+  (comp (partial s a) (partial t b)))
+
+(defn inverse [a b]
+  "z -> (1/a)z - b
+the inverse function of
+z -> az + b"
+  )
+
 ;; inversion in a circle
 ;; z -> 1 / (z bar)
 ;; inversion in unit circle I
