@@ -137,6 +137,7 @@
 (def i (make-rect 0 1))
 
 (comment
-  ((mult-by i) one)
-  ((add-by one) one)
+  ((mult-by i) one)  ;;=> #edn_play.complex.ComplexRect{:x 0, :y 1}
+  ((mult-by i) i)    ;;=> #edn_play.complex.ComplexRect{:x -1, :y 0}
+  ((add-by one) one) ;;=> #edn_play.complex.ComplexRect{:x 2, :y 0}
   )
