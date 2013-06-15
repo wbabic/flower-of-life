@@ -13,7 +13,10 @@
   (rect [complex])
   (inverse [complex])
   (mult [z1 z2])
-  (mult-by [z1]))
+  (mult-by [z1])
+  (plus [z1 z2])
+  (minus [z])
+  (add-by [z1]))
 
 (defn round [r]
   (-> r (* 100) math/round (/ 100.0)))
@@ -55,8 +58,19 @@
           x3 (- (* x1 x2) (* y1 y2))
           y3 (+ (* x1 y2) (* y1 x2))]
       (ComplexRect. x3 y3)))
+  (plus [z1 z2]
+    (let [z2 (rect z2)
+          x (+ (:x z1) (:x z2))
+          y (+ (:y z1) (:y z2))]
+      (ComplexRect. x y)))
+  (minus [z]
+    (let [x (- (:x z))
+          y (- (:y z))]
+      (ComplexRect. x y)))
   (mult-by [z1]
-    (fn [z2] (mult z1 z2))))
+    (fn [z2] (mult z1 z2)))
+  (add-by [z]
+    (fn [w] (plus z w))))
 
 (extend-type ComplexPolar
   complex
@@ -79,8 +93,13 @@
           r2 (:r z2) a2 (:a z2)]
       (ComplexPolar. r2 a2)))
   (mult-by [z1]
-    (fn [z2] (mult z1 z2))))
-
+    (fn [z2] (mult z1 z2)))
+  (plus [z1 z2]
+    (plus (rect z1) z2))
+  (minus [z]
+    (minus (rect z)))
+  (add-by [z]
+    (fn [w] (plus z w))))
 
 (comment
   (str (ComplexPolar. 1 (/ Math/PI 2)))
@@ -106,4 +125,18 @@
   (str (a (ComplexRect. 1 1)))
   ;;=> "1.41e^i0.79"
   
+  )
+
+(defn make-rect [x y]
+  (ComplexRect. x y))
+
+(defn make-polar [r a]
+  (ComplexPolar. r a))
+
+(def one (make-rect 1 0))
+(def i (make-rect 0 1))
+
+(comment
+  ((mult-by i) one)
+  ((add-by one) one)
   )

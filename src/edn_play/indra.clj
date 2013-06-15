@@ -1,16 +1,19 @@
 (ns edn-play.indra
-  (:use edn-play.geometry))
+  (:use edn-play.complex)
+  (:import  (edn_play.complex.ComplexRect)
+            (edn_play.complex.ComplexPolar)))
 
 ;; indra's pearls
 ;; the vision of felix klein
 
 (def ds1 "0 to 2+2i integer coordinate grid"
   (for [j (range 3) k (range 3)]
-    (complex j k)))
+    (edn_play.complex.ComplexRect. j k)))
 
 (def ids1 "multiply ds1 by 1 + 1i "
-  (let [k (complex 1 1)]
-    (map (partial mult-rect k) ds1)))
+  (let [k (edn_play.complex.ComplexRect. 1 1)
+        a (mult-by k)]
+    (map a ds1)))
 
 ;; complex transform
 ;; Sa: z -> az
@@ -20,21 +23,38 @@
 ;; a != 0, affine group of maps
 
 (defn s [a]
-  (fn [z] (mult-rect a z)))
+  (mult-by a))
 
 (defn t [b]
-  (fn [z] (plus z b)))
+  (add-by b))
 
 (defn affine [a b]
   "z -> az + b"
-  (comp (partial s a) (partial t b)))
+  (comp (s b) (t a)))
 
-(defn inverse [a b]
+(defn affine-inverse [a b]
   "z -> (1/a)z - b
 the inverse function of
 z -> az + b"
-  )
+  (comp (s (inverse a)) (t (minus b))))
 
+;; TODO - make an affine record type
+;; allowing for composition of elements
+(comment
+  (def one (make-rect 1 0))
+  (def b (make-rect 1 2))
+  (def a (polar 1 (/ Math/PI 4)))
+  (def a1 (affine a b))
+  (def c (a1 (rect 1 0)))
+  ((s a) one)
+  ;;=> #edn_play.complex.ComplexRect{:x 1, :y 2}
+  (def z (make-rect 1 1))
+
+  (str (a1 one))
+  ;;=> "2.83e^i0.79"
+  (def a2 (affine-inverse a b))
+  ((comp a2 a1) z)
+  )
 ;; inversion in a circle
 ;; z -> 1 / (z bar)
 ;; inversion in unit circle I
