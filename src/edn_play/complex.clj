@@ -16,7 +16,8 @@
   (mult-by [z1])
   (plus [z1 z2])
   (minus [z])
-  (add-by [z1]))
+  (add-by [z1])
+  (inversion [z]))
 
 (defn round [r]
   (-> r (* 100) math/round (/ 100.0)))
@@ -70,7 +71,12 @@
   (mult-by [z1]
     (fn [z2] (mult z1 z2)))
   (add-by [z]
-    (fn [w] (plus z w))))
+    (fn [w] (plus z w)))
+  (inversion [z]
+    (let [r (length z)
+          x (/ (:x z) r)
+          y (/ (:y z) r)]
+      (ComplexRect. x y))))
 
 (extend-type ComplexPolar
   complex
@@ -99,7 +105,11 @@
   (minus [z]
     (minus (rect z)))
   (add-by [z]
-    (fn [w] (plus z w))))
+    (fn [w] (plus z w)))
+  (inversion [z]
+    (let [r (/ (:r z))
+          a (:a z)]
+      (ComplexPolar. r a))))
 
 (comment
   (str (ComplexPolar. 1 (/ Math/PI 2)))
