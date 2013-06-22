@@ -17,7 +17,7 @@
   (plus [z1 z2])
   (minus [z])
   (add-by [z1])
-  (inversion [z]))
+  (inversion [z] "the inverion of z wrt unit circle" ))
 
 (defn round [r]
   (-> r (* 100) math/round (/ 100.0)))
@@ -48,10 +48,10 @@
   (rect [z] z)
   (polar [z] (ComplexPolar. (length z) (angle z)))
   (inverse [z]
-    (let [r (length z)
-          x (/ (:x z) r)
-          y (/ (- (:y z) r))]
-      (ComplexRect. x y)))
+    (let [x (:x z)
+          y (:y z)
+          r2 (+ (* x x) (* y y))]
+      (ComplexRect. (/ x r2) (- (/ y r2)))))
   (mult [z1 z2]
     (let [x1 (:x z1) y1 (:y z1)
           z2 (rect z2)
@@ -74,8 +74,9 @@
     (fn [w] (plus z w)))
   (inversion [z]
     (let [r (length z)
-          x (/ (:x z) r)
-          y (/ (:y z) r)]
+          r2 (* r r)
+          x (/ (:x z) r2)
+          y (/ (:y z) r2)]
       (ComplexRect. x y))))
 
 (extend-type ComplexPolar
@@ -111,30 +112,81 @@
           a (:a z)]
       (ComplexPolar. r a))))
 
+(defn inversion-by
+  "return the function that inverts in unit circle"
+  []
+  (fn [z] (inversion z)))
+
 (comment
   (str (ComplexPolar. 1 (/ Math/PI 2)))
   ;;=> "1.0e^i1.57"
   (str (inverse (ComplexPolar. 1 (/ Math/PI 2))))
   ;;=> "1.0e^i-1.57"
   (str (inverse (ComplexRect. 1 1)))
+  ;;=> "0.5 + i-0.5"
+  (length (ComplexRect. 2 2))
+  ;;=> 2.8284271247461903
+  (angle (ComplexRect. 2 2))
+  ;;=> 0.7853981633974483
+  (str (polar (ComplexRect. 2 2)))
+  ;;=> "2.83e^i0.79"
+  (/ (length (ComplexRect. 2 2)))
+  ;;=> 0.35355339059327373
+  (length (inverse (ComplexRect. 2 2)))
+  ;;=> 0.35355339059327373
+  (angle (inverse (ComplexRect. 2 2)))
+  ;;=> -0.7853981633974483
+
+  (str (inverse (ComplexRect. 2 2)))
+  ;;=> "0.25 + i-0.25"
+  (inverse (ComplexRect. 2 2))
+  ;;=> #edn_play.complex.ComplexRect{:x 1/4, :y -1/4}
+  (str (polar (inverse (ComplexRect. 2 2))))
+  ;;=> "0.35e^i-0.79"
+  (str (inverse (polar (ComplexRect. 2 2))))
+  ;;=> "0.35e^i-0.79"
+  (mult (inverse (ComplexRect. 2 2)) (ComplexRect. 2 2))
+  ;;=> #edn_play.complex.ComplexRect{:x 1N, :y 0N}
+  (str (inverse (ComplexRect. 2 0)))
+  ;;=> "0.5 + i0.0"
+
   (str (polar (map->ComplexRect {:x 1 :y 2})))
   ;;=> "2.24e^i1.11"
 
   (def z1 (ComplexRect. 1 1))
   (angle z1)
   ;;=> 0.7853981633974483
+  (length z1)
+  ;;=> 1.4142135623730951
   (def a (mult-by z1))
 
+  (def iz1 (inversion z1))
+  (angle iz1)
+  ;;=> 0.7853981633974483
+  (length iz1)
+  ;;=> 0.7071067811865474
+  
   (def z2 (ComplexPolar. 1 (/ (Math/PI) 2)))
+  (str z2)
+  ;;=> "1.0e^i1.57"
   (angle z2)
   ;;=> 1.5707963267948966
+  (length z2)
+  ;;=> 1
   (angle (a z2))
   ;;=> 2.356194490192345
   ;; multiplication adds angles
 
   (str (a (ComplexRect. 1 1)))
-  ;;=> "1.41e^i0.79"
-  
+  ;;=> "0.0 + i2.0"
+
+  (def iz2 (inversion z2))
+  (str iz2)
+
+  (length (inversion (ComplexRect. 0.25 0.25)))
+  ;;=>  2.8284271247461894
+  (length (inversion (polar (ComplexRect. 0.25 0.25))))
+  ;;=> 2.82842712474619
   )
 
 (defn make-rect [x y]
