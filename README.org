@@ -1,23 +1,18 @@
 * edn-play
+  A exploration of how to read and write edn and json. This project
+  uses clojure to build geometric data structures and then
+  converts them to edn and json. This step is done through the repl. 
 
-  A exploration of how to read and write edn 
+  Then the json data is rendered to svg using d3.js and underscore.js.
 
-** References
-   https://github.com/edn-format/edn/wiki/Implementations
-   https://github.com/edn-format/edn
-   http://clojure.github.io/clojure/clojure.edn-api.html
-  
-   https://github.com/clojure/tools.reader
-
-
-   https://github.com/fogus/ring-edn
-
-   https://github.com/shaunxcode/jsedn
+  The first step is to work with javascript and json on the client side
+  later, we can try using clojurscript.
 
 ** Usage
-*** write and read clojure data to/from string, file
-    M-x nrepl-jack-in
+   From Emacs,
+   M-x nrepl-jack-in
 
+   #+BEGIN_SRC clojure
     user> (use 'clojure.repl)
     user> (use 'clojure.edn)
 
@@ -39,32 +34,27 @@
     user> (spit "test.edn" (pr-str {:a 1 :b 2}))
     user> (class (read-string (slurp "test.edn")))
     ;;=> clojure.lang.PersistentArrayMap
+   #+END_SRC
 
-*** read write into clojure web app using ring
-    see edn-web
+   To explre clojure.data.json,
+   #+BEGIN_SRC clojure
+   user> (require '[clojure.data.json :as json])
+
+   user> (use 'clojure.repl)
+   user> (dir clojure.data.json)
+   #+END_SRC
+
+** References
+   - https://github.com/edn-format/edn/wiki/Implementations
+   - https://github.com/edn-format/edn
+   - http://clojure.github.io/clojure/clojure.edn-api.html
+   - https://github.com/clojure/tools.reader
+   - https://github.com/fogus/ring-edn
+   - https://github.com/shaunxcode/jsedn
+   - https://github.com/clojure/data.json
 
 ** License
-
    Copyright © 2013 Walter P Babic
 
    Distributed under the Eclipse Public License, the same as Clojure.
-* clojure.data.json
-  use clojure to generate json data structures
-  to be used directly bt javascript
 
-  first step is to work with javascript and json on the client side
-  later, we can try using clojurscript
-
-  
-  
-  https://github.com/clojure/data.json
-
-  [org.clojure/data.json "0.2.2"]
-
-  M-x nrepl-jack-in
-
-  (require '[clojure.data.json :as json])
-
-  (use 'clojure.repl)
-  (dir clojure.data.json)
-  
