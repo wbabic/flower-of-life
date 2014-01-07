@@ -8,6 +8,7 @@
   The first step is to work with javascript and json on the client side
   later, we can try using clojurscript.
 
+  For demo, see http://wbabic.github.io/flower-of-life/flower.html
 ** Usage
    From Emacs,
    M-x nrepl-jack-in
