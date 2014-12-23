@@ -10,3 +10,8 @@ pom.xml.asc
 .lein-failures
 .lein-plugins
 .lein-repl-history
+/.DS_Store
+/.nrepl-port
+/resources/.DS_Store
+/resources/public/.DS_Store
+/src/.DS_Store
